@@ -73,4 +73,30 @@
         public int Quantity { get; set; }
         public decimal UnitCostPrice { get; set; }
     }
+    // ── Deduct Stock ──
+    public class DeductStockDto
+    {
+        public string? OrderId { get; set; }
+        public List<DeductStockItemDto> Items { get; set; } = new();
+    }
+
+    public class DeductStockItemDto
+    {
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
+    }
+    // ── DTOs cho Imports ──
+    public class CreateImportDto
+    {
+        public string? SupplierId { get; set; }  // ← đổi int thành string?
+        public string? Note { get; set; }
+        public List<ImportItemDto> Items { get; set; } = new();
+    }
+
+    public class ImportItemDto
+    {
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
+        public decimal UnitCostPrice { get; set; }
+    }
 }

@@ -21,18 +21,18 @@ namespace ProductService.Data
                 .HasForeignKey(c => c.ParentCategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Decimal precision
+            // ✅ Dùng numeric thay decimal(18,2) cho PostgreSQL
             modelBuilder.Entity<Product>()
                 .Property(p => p.CostPrice)
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             modelBuilder.Entity<Product>()
                 .Property(p => p.SalePrice)
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             modelBuilder.Entity<StockReceiptItem>()
                 .Property(p => p.UnitCostPrice)
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             // Seed dữ liệu mẫu
             modelBuilder.Entity<Category>().HasData(

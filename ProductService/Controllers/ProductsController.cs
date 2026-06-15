@@ -27,6 +27,7 @@ namespace ProductService.Controllers
         {
             var query = _context.Products
                 .Include(p => p.Category)
+                .Where(p => p.IsActive) // Ẩn sản phẩm đã bị xóa mềm
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
@@ -136,7 +137,22 @@ namespace ProductService.Controllers
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null) return NotFound();
-            product.IsActive = false; // Soft delete
+
+            // Kiểm tra sản phẩm có đang trong phiếu nhập kho không
+            var hasReceipt = await _context.StockReceiptItems
+                .AnyAsync(i => i.ProductId == id);
+
+            if (hasReceipt)
+            {
+                // Soft delete: đánh dấu không hoạt động thay vì xóa cứng
+                // để bảo toàn lịch sử nhập kho
+                product.IsActive = false;
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+
+            // Không có lịch sử nhập kho → xóa cứng hoàn toàn
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return NoContent();
         }
